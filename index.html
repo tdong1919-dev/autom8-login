@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto8 Comments - Facebook Login</title>
-    <meta name="description" content="Login to Auto8 Comments with Facebook">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         body {
@@ -25,32 +24,11 @@
         .container {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            padding: 40px;
             max-width: 500px;
             width: 100%;
             text-align: center;
-        }
-        
-        .header {
-            background: #1877F2;
-            color: white;
-            padding: 30px 20px;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
-        
-        .content {
-            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         
         .logo {
@@ -67,21 +45,27 @@
             font-weight: bold;
         }
         
+        h1 {
+            color: #1C1E21;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            color: #65676B;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
         .login-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            display: block;
             background: #1877F2;
             color: white;
             text-decoration: none;
-            padding: 16px 32px;
+            padding: 16px;
             border-radius: 12px;
             font-size: 18px;
             font-weight: 600;
             transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            width: 100%;
             margin: 20px 0;
         }
         
@@ -91,16 +75,7 @@
             box-shadow: 0 10px 20px rgba(24, 119, 242, 0.3);
         }
         
-        .login-btn:active {
-            transform: translateY(0);
-        }
-        
-        .facebook-icon {
-            font-size: 24px;
-            margin-right: 12px;
-        }
-        
-        .info-box {
+        .info {
             background: #F0F2F5;
             border-radius: 12px;
             padding: 20px;
@@ -108,45 +83,12 @@
             text-align: left;
         }
         
-        .info-box h3 {
+        .info h3 {
             color: #1877F2;
             margin-bottom: 10px;
-            font-size: 16px;
         }
         
-        .info-box p {
-            color: #65676B;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .direct-link {
-            margin-top: 25px;
-            padding: 15px;
-            background: #F8F9FA;
-            border-radius: 10px;
-            border-left: 4px solid #1877F2;
-        }
-        
-        .direct-link a {
-            color: #1877F2;
-            text-decoration: none;
-            font-size: 14px;
-            word-break: break-all;
-        }
-        
-        .direct-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .footer {
-            padding: 20px;
-            border-top: 1px solid #E4E6EB;
-            color: #65676B;
-            font-size: 14px;
-        }
-
-        .result-box {
+        .token-display {
             background: #e7f3ff;
             border-radius: 12px;
             padding: 20px;
@@ -154,183 +96,86 @@
             text-align: left;
             display: none;
         }
-
-        .result-box h3 {
-            color: #1877F2;
-            margin-bottom: 10px;
-        }
-
-        .result-box pre {
+        
+        pre {
             background: white;
             padding: 10px;
             border-radius: 6px;
             overflow-x: auto;
             font-size: 12px;
         }
-        
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 15px;
-            }
-            
-            .content {
-                padding: 30px 20px;
-            }
-            
-            .login-btn {
-                padding: 14px 24px;
-                font-size: 16px;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Auto8 Comments</h1>
-            <p>AI-powered Instagram comment replies</p>
+        <div class="logo">A8</div>
+        
+        <h1>Auto8 Comments</h1>
+        <p>Login with Facebook to connect your Instagram account</p>
+        
+        <!-- Simple OAuth Redirect Button -->
+        <a href="https://www.facebook.com/v19.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https%3A%2F%2Ftdong1919-dev.github.io%2Fautom8-login%2F&scope=public_profile,email&response_type=token" 
+           class="login-btn" 
+           id="loginBtn">
+            Login with Facebook
+        </a>
+        
+        <div class="info">
+            <h3>How it works:</h3>
+            <p>1. Click the button above</p>
+            <p>2. Login to Facebook if needed</p>
+            <p>3. You'll be redirected back here with an access token</p>
+            <p>4. The token will appear below</p>
         </div>
         
-        <div class="content">
-            <div class="logo">A8</div>
-            
-            <h2 style="margin-bottom: 30px; color: #1C1E21;">Connect Your Instagram Account</h2>
-            <p style="color: #65676B; margin-bottom: 30px; line-height: 1.6;">
-                Login with Facebook to connect your Instagram Business Account and start automating comment replies with AI.
-            </p>
-            
-            <!-- CORRECTED LOGIN BUTTON -->
-            <button class="login-btn" id="facebookLoginBtn">
-                <span class="facebook-icon">f</span>
-                Login with Facebook
-            </button>
-            
-            <div class="result-box" id="resultBox">
-                <h3>Login Successful! 🎉</h3>
-                <p>Access Token:</p>
-                <pre id="accessToken"></pre>
-                <p style="margin-top: 10px;">User Info:</p>
-                <pre id="userInfo"></pre>
-            </div>
-            
-            <div class="info-box">
-                <h3>🔒 Secure Login</h3>
-                <p>We use Facebook's official OAuth system. We never see your password, and only access the permissions you approve.</p>
-            </div>
-            
-            <div class="direct-link">
-                <p style="font-size: 12px; margin-bottom: 8px; color: #65676B;">Direct OAuth link:</p>
-                <a href="#" id="directLink">
-                    Click to copy link
-                </a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>By logging in, you agree to our <a href="https://autom8comments.carrd.co/privacy" style="color: #1877F2;">Privacy Policy</a></p>
-            <p style="margin-top: 8px; font-size: 12px;">App ID: 1859085634713050</p>
+        <div class="token-display" id="tokenDisplay">
+            <h3>✅ Login Successful!</h3>
+            <p>Access Token:</p>
+            <pre id="accessToken"></pre>
+            <p style="margin-top: 15px;">User Info:</p>
+            <pre id="userInfo"></pre>
         </div>
     </div>
 
-    <!-- Load Facebook SDK -->
     <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId      : '1859085634713050',
-                cookie     : true,
-                xfbml      : true,
-                version    : 'v19.0'
-            });
-            
-            // Check if user is already logged in
-            FB.getLoginStatus(function(response) {
-                if (response.status === 'connected') {
-                    showUserInfo(response.authResponse.accessToken);
-                }
-            });
-        };
-
-        // Load SDK
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-        // Login function
-        document.getElementById('facebookLoginBtn').addEventListener('click', function() {
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    console.log('Welcome!  Fetching your information.... ');
-                    showUserInfo(response.authResponse.accessToken);
-                } else {
-                    console.log('User cancelled login or did not fully authorize.');
-                    alert('Login cancelled. Please try again.');
-                }
-            }, {
-                scope: 'public_profile,email', // Start with basic permissions
-                return_scopes: true,
-                redirect_uri: 'https://tdong1919-dev.github.io/autom8-login/'
-            });
-        });
-
-        function showUserInfo(accessToken) {
-            // Show access token
-            document.getElementById('accessToken').textContent = accessToken;
-            
-            // Get user info
-            FB.api('/me', { fields: 'id,name,email' }, function(response) {
-                document.getElementById('userInfo').textContent = JSON.stringify(response, null, 2);
-                document.getElementById('resultBox').style.display = 'block';
-            });
-        }
-
-        // Auto-click after 3 seconds (optional - you can remove this)
-        setTimeout(function() {
-            document.getElementById('facebookLoginBtn').click();
-        }, 3000);
-        
-        // Generate and copy direct link
-        document.getElementById('directLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            const directLink = 'https://www.facebook.com/v19.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https%3A%2F%2Ftdong1919-dev.github.io%2Fautom8-login%2F&scope=public_profile,email&response_type=token';
-            
-            navigator.clipboard.writeText(directLink).then(function() {
-                const originalText = e.target.textContent;
-                e.target.textContent = 'Link copied to clipboard!';
-                setTimeout(function() {
-                    e.target.textContent = originalText;
-                }, 2000);
-            });
-            
-            window.open(directLink, '_blank');
-        });
-
-        // Check for OAuth response in URL (if using direct link)
-        function checkForOAuthResponse() {
+        // Check if we have a token in the URL (from Facebook redirect)
+        function checkForToken() {
+            // Look for token in URL fragment (after #)
             if (window.location.hash) {
-                const hash = window.location.hash.substring(1);
+                const hash = window.location.hash.substring(1); // Remove the #
                 const params = new URLSearchParams(hash);
                 const accessToken = params.get('access_token');
                 
                 if (accessToken) {
+                    // Show token
                     document.getElementById('accessToken').textContent = accessToken;
-                    document.getElementById('resultBox').style.display = 'block';
+                    document.getElementById('tokenDisplay').style.display = 'block';
                     
-                    // Use the token to get user info
+                    // Get user info using the token
                     fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email`)
                         .then(response => response.json())
-                        .then(data => {
-                            document.getElementById('userInfo').textContent = JSON.stringify(data, null, 2);
+                        .then(userData => {
+                            document.getElementById('userInfo').textContent = 
+                                JSON.stringify(userData, null, 2);
+                        })
+                        .catch(error => {
+                            document.getElementById('userInfo').textContent = 
+                                'Error fetching user info: ' + error.message;
                         });
+                    
+                    // Scroll to show the token
+                    document.getElementById('tokenDisplay').scrollIntoView({ behavior: 'smooth' });
                 }
             }
         }
-
-        // Check on page load
-        window.onload = checkForOAuthResponse;
+        
+        // Auto-click login button after 1 second (optional)
+        setTimeout(() => {
+            document.getElementById('loginBtn').click();
+        }, 1000);
+        
+        // Check for token when page loads
+        window.onload = checkForToken;
     </script>
 </body>
 </html>
