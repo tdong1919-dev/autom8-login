@@ -145,6 +145,28 @@
             color: #65676B;
             font-size: 14px;
         }
+
+        .result-box {
+            background: #e7f3ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        .result-box h3 {
+            color: #1877F2;
+            margin-bottom: 10px;
+        }
+
+        .result-box pre {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
         
         @media (max-width: 480px) {
             .container {
@@ -177,12 +199,19 @@
                 Login with Facebook to connect your Instagram Business Account and start automating comment replies with AI.
             </p>
             
-            <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https://www.appsheet.com/Account/AuthCallback&scope=instagram_basic,instagram_manage_comments,pages_show_list,pages_read_engagement,pages_manage_engagement,public_profile" 
-               class="login-btn" 
-               id="facebookLoginBtn">
+            <!-- CORRECTED LOGIN BUTTON -->
+            <button class="login-btn" id="facebookLoginBtn">
                 <span class="facebook-icon">f</span>
                 Login with Facebook
-            </a>
+            </button>
+            
+            <div class="result-box" id="resultBox">
+                <h3>Login Successful! 🎉</h3>
+                <p>Access Token:</p>
+                <pre id="accessToken"></pre>
+                <p style="margin-top: 10px;">User Info:</p>
+                <pre id="userInfo"></pre>
+            </div>
             
             <div class="info-box">
                 <h3>🔒 Secure Login</h3>
@@ -190,10 +219,9 @@
             </div>
             
             <div class="direct-link">
-                <p style="font-size: 12px; margin-bottom: 8px; color: #65676B;">If the button doesn't work, use this direct link:</p>
-                <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https://www.appsheet.com/Account/AuthCallback&scope=instagram_basic,instagram_manage_comments,pages_show_list,pages_read_engagement,pages_manage_engagement,public_profile" 
-                   id="directLink">
-                   https://www.facebook.com/v18.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https://www.appsheet.com/Account/AuthCallback&scope=instagram_basic,instagram_manage_comments,pages_show_list,pages_read_engagement,pages_manage_engagement,public_profile
+                <p style="font-size: 12px; margin-bottom: 8px; color: #65676B;">Direct OAuth link:</p>
+                <a href="#" id="directLink">
+                    Click to copy link
                 </a>
             </div>
         </div>
@@ -204,25 +232,105 @@
         </div>
     </div>
 
+    <!-- Load Facebook SDK -->
     <script>
-        // Auto-click after 3 seconds (optional)
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1859085634713050',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v19.0'
+            });
+            
+            // Check if user is already logged in
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    showUserInfo(response.authResponse.accessToken);
+                }
+            });
+        };
+
+        // Load SDK
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Login function
+        document.getElementById('facebookLoginBtn').addEventListener('click', function() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    console.log('Welcome!  Fetching your information.... ');
+                    showUserInfo(response.authResponse.accessToken);
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                    alert('Login cancelled. Please try again.');
+                }
+            }, {
+                scope: 'public_profile,email', // Start with basic permissions
+                return_scopes: true,
+                redirect_uri: 'https://tdong1919-dev.github.io/autom8-login/'
+            });
+        });
+
+        function showUserInfo(accessToken) {
+            // Show access token
+            document.getElementById('accessToken').textContent = accessToken;
+            
+            // Get user info
+            FB.api('/me', { fields: 'id,name,email' }, function(response) {
+                document.getElementById('userInfo').textContent = JSON.stringify(response, null, 2);
+                document.getElementById('resultBox').style.display = 'block';
+            });
+        }
+
+        // Auto-click after 3 seconds (optional - you can remove this)
         setTimeout(function() {
             document.getElementById('facebookLoginBtn').click();
         }, 3000);
         
-        // Copy link functionality (optional enhancement)
+        // Generate and copy direct link
         document.getElementById('directLink').addEventListener('click', function(e) {
             e.preventDefault();
-            const link = this.href;
-            navigator.clipboard.writeText(link).then(function() {
+            const directLink = 'https://www.facebook.com/v19.0/dialog/oauth?client_id=1859085634713050&redirect_uri=https%3A%2F%2Ftdong1919-dev.github.io%2Fautom8-login%2F&scope=public_profile,email&response_type=token';
+            
+            navigator.clipboard.writeText(directLink).then(function() {
                 const originalText = e.target.textContent;
                 e.target.textContent = 'Link copied to clipboard!';
                 setTimeout(function() {
                     e.target.textContent = originalText;
                 }, 2000);
             });
-            window.open(link, '_blank');
+            
+            window.open(directLink, '_blank');
         });
+
+        // Check for OAuth response in URL (if using direct link)
+        function checkForOAuthResponse() {
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                const accessToken = params.get('access_token');
+                
+                if (accessToken) {
+                    document.getElementById('accessToken').textContent = accessToken;
+                    document.getElementById('resultBox').style.display = 'block';
+                    
+                    // Use the token to get user info
+                    fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('userInfo').textContent = JSON.stringify(data, null, 2);
+                        });
+                }
+            }
+        }
+
+        // Check on page load
+        window.onload = checkForOAuthResponse;
     </script>
 </body>
 </html>
